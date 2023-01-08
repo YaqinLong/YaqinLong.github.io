@@ -16,15 +16,15 @@
   <meta name="author" content="YaqinLong">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Blog of ElsaLong">
+    <meta name="description" content="1 配置Miniforge1.1 安装Miniforge安装arm版本的Miniforge，此处安装的是Miniforge-pypy3-22.9.0-2-Linux-aarch64.sh，下载后放置在主目录下进行安装： 1sh Miniforge-pypy3-22.9.0-2-Linux-aarch64.sh 安装好后修改环境变量： 123vim ~&#x2F;.bashrc  export PATH&#x3D;&amp;q">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Jetson Xavier NX配置实录（三）：Pytorch等配置">
+<meta property="og:title" content="Jetson Xavier NX配置实录（三）：安装miniforge、vscode">
 <meta property="og:url" content="https://yaqinlong.github.io/2023/01/04/nx3/index.html">
 <meta property="og:site_name" content="Blog of Elsa Long">
-<meta property="og:description" content="Blog of ElsaLong">
+<meta property="og:description" content="1 配置Miniforge1.1 安装Miniforge安装arm版本的Miniforge，此处安装的是Miniforge-pypy3-22.9.0-2-Linux-aarch64.sh，下载后放置在主目录下进行安装： 1sh Miniforge-pypy3-22.9.0-2-Linux-aarch64.sh 安装好后修改环境变量： 123vim ~&#x2F;.bashrc  export PATH&#x3D;&amp;q">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-01-04T12:08:35.000Z">
-<meta property="article:modified_time" content="2023-01-04T13:39:42.298Z">
+<meta property="article:modified_time" content="2023-01-08T11:57:11.642Z">
 <meta property="article:author" content="YaqinLong">
 <meta property="article:tag" content="原创">
 <meta name="twitter:card" content="summary_large_image">
@@ -33,7 +33,7 @@
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>Jetson Xavier NX配置实录（三）：Pytorch等配置 - Blog of Elsa Long</title>
+  <title>Jetson Xavier NX配置实录（三）：安装miniforge、vscode - Blog of Elsa Long</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -216,7 +216,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Jetson Xavier NX配置实录（三）：Pytorch等配置"></span>
+            <span id="subtitle" data-typed-text="Jetson Xavier NX配置实录（三）：安装miniforge、vscode"></span>
           
         </div>
 
@@ -239,7 +239,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          0 字
+          1.1k 字
         
       </span>
     
@@ -250,7 +250,7 @@
         
         
         
-          1 分钟
+          10 分钟
         
       </span>
     
@@ -296,12 +296,32 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Jetson Xavier NX配置实录（三）：Pytorch等配置</h1>
+            <h1 style="display: none">Jetson Xavier NX配置实录（三）：安装miniforge、vscode</h1>
             
             
               <div class="markdown-body">
                 
-                
+                <h1 id="1-配置Miniforge"><a href="#1-配置Miniforge" class="headerlink" title="1 配置Miniforge"></a>1 配置Miniforge</h1><h2 id="1-1-安装Miniforge"><a href="#1-1-安装Miniforge" class="headerlink" title="1.1 安装Miniforge"></a>1.1 安装Miniforge</h2><p>安装arm版本的<a target="_blank" rel="noopener" href="https://github.com/conda-forge/miniforge/releases">Miniforge</a>，此处安装的是<strong>Miniforge-pypy3-22.9.0-2-Linux-aarch64.sh</strong>，下载后放置在主目录下进行安装：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">sh</span> Miniforge-pypy3-<span class="hljs-number">22</span>.<span class="hljs-number">9</span>.<span class="hljs-number">0</span>-<span class="hljs-number">2</span>-Linux-aarch64.sh<br></code></pre></td></tr></table></figure>
+<p>安装好后修改环境变量：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">vim ~/.bashrc  <br><span class="hljs-built_in">export</span> PATH=<span class="hljs-string">&quot;/home/&lt;username&gt;/miniforge-pypy3/bin:<span class="hljs-variable">$PATH</span>&quot;</span>  <br><span class="hljs-built_in">source</span> ~/.bashrc <br></code></pre></td></tr></table></figure>
+<p>添加源：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs awk">conda config --add channels https:<span class="hljs-regexp">//mi</span>rrors.tuna.tsinghua.edu.cn<span class="hljs-regexp">/anaconda/</span>pkgs<span class="hljs-regexp">/free/</span><br>conda config --add channels https:<span class="hljs-regexp">//mi</span>rrors.tuna.tsinghua.edu.cn<span class="hljs-regexp">/anaconda/</span>pkgs<span class="hljs-regexp">/main/</span><br>conda config --set show_channel_urls yes<br></code></pre></td></tr></table></figure>
+<p>进入base环境</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros">conda<span class="hljs-built_in"> config </span>--<span class="hljs-built_in">set</span> auto_activate_base <span class="hljs-literal">true</span><br></code></pre></td></tr></table></figure>
+<p>此时终端显示(base)即为成功。</p>
+<h2 id="1-2-创建虚拟环境"><a href="#1-2-创建虚拟环境" class="headerlink" title="1.2 创建虚拟环境"></a>1.2 创建虚拟环境</h2><p>Miniforge类似于anaconda，所以创建虚拟环境的方法类似：</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">conda</span> create -n mmdet3d python=<span class="hljs-number">3</span>.<span class="hljs-number">8</span><br></code></pre></td></tr></table></figure>
+<p>此处python环境配置为3.8主要是为了后续安装pytorch（因为下载的pytorch的whl文件对应cp38，一开始应用3.9发现会报错：“…is not supported in this platform”）<br>进入虚拟环境</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs applescript">conda <span class="hljs-built_in">activate</span> mmdet3d<br></code></pre></td></tr></table></figure>
+<p>此时(base)变为(mmdet3d)则创造虚拟环境成功。</p>
+<h2 id="1-3-配置虚拟环境下的pytorch和torchvision"><a href="#1-3-配置虚拟环境下的pytorch和torchvision" class="headerlink" title="1.3 配置虚拟环境下的pytorch和torchvision"></a>1.3 配置虚拟环境下的pytorch和torchvision</h2><ol>
+<li>首先像上文一样安装一些必要包：<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs cmake">conda <span class="hljs-keyword">install</span> mpi4py<br>conda <span class="hljs-keyword">install</span> Cython<br>conda <span class="hljs-keyword">install</span> numpy<br></code></pre></td></tr></table></figure></li>
+<li>按照下列命令安装pytorch<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-regexp">/home/</span>lyq<span class="hljs-regexp">/miniforge-pypy3/</span>envs<span class="hljs-regexp">/mmdet3d/</span>bin/pip install torch-<span class="hljs-number">1.11</span>.<span class="hljs-number">0</span>-cp38-cp38-linux_aarch64.whl<br></code></pre></td></tr></table></figure></li>
+<li>按照下列命令安装torchvision<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs awk">cd torchvision<br><span class="hljs-regexp">/home/</span>lyq<span class="hljs-regexp">/miniforge-pypy3/</span>envs<span class="hljs-regexp">/mmdet3d/</span>bin/python setup.py install<br></code></pre></td></tr></table></figure>
+在安装torchvision过程中可能会报错:”permission denied”，则输入”sudo su”进入管理员模式进行安装即可。</li>
+</ol>
+
                 
               </div>
             
@@ -346,7 +366,7 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Jetson Xavier NX配置实录（三）：Pytorch等配置</div>
+      <div>Jetson Xavier NX配置实录（三）：安装miniforge、vscode</div>
       <div>https://yaqinlong.github.io/2023/01/04/nx3/</div>
     </div>
     <div class="license-meta">
