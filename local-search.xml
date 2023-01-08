@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  
+  
+  
+  <entry>
+    <title>Jetson Xavier NX配置实录（三）：Pytorch等配置</title>
+    <link href="/2023/01/04/nx3/"/>
+    <url>/2023/01/04/nx3/</url>
+    
+    <content type="html"><![CDATA[]]></content>
+    
+    
+    <categories>
+      
+      <category>Jetson Xavier NX</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>原创</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>Jetson Xavier NX配置实录（二）：基础环境配置</title>
+    <link href="/2023/01/04/nx2/"/>
+    <url>/2023/01/04/nx2/</url>
+    
+    <content type="html"><![CDATA[<h1 id="1-换源"><a href="#1-换源" class="headerlink" title="1 换源"></a>1 换源</h1><p>根据ubuntu20.04LTS版本，更换对应的国内清华源，步骤如下：</p><ol><li>首先备份源文件<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">sudo cp <span class="hljs-regexp">/etc/</span>apt<span class="hljs-regexp">/sources.list /</span>etc<span class="hljs-regexp">/apt/</span>sources.list.bk<br></code></pre></td></tr></table></figure></li><li>编辑sources.lis文件<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">sudo gedit <span class="hljs-regexp">/etc/</span>apt/sources.list<br></code></pre></td></tr></table></figure></li><li>将原有源删除，替换为清华源<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs awk">deb http:<span class="hljs-regexp">//mi</span>rrors.tuna.tsinghua.edu.cn<span class="hljs-regexp">/ubuntu-ports/</span> bionic-updates main restricted universe multiverse<br>deb-src http:<span class="hljs-regexp">//mi</span>rrors.tuna.tsinghua.edu.cn<span class="hljs-regexp">/ubuntu-ports/</span> bionic-updates main restricted universe multiverse<br>deb http:<span class="hljs-regexp">//mi</span>rrors.tuna.tsinghua.edu.cn<span class="hljs-regexp">/ubuntu-ports/</span> bionic-security main restricted universe multiverse<br>deb-src http:<span class="hljs-regexp">//mi</span>rrors.tuna.tsinghua.edu.cn<span class="hljs-regexp">/ubuntu-ports/</span> bionic-security main restricted universe multiverse<br>deb http:<span class="hljs-regexp">//mi</span>rrors.tuna.tsinghua.edu.cn<span class="hljs-regexp">/ubuntu-ports/</span> bionic-backports main restricted universe multiverse<br>deb-src http:<span class="hljs-regexp">//mi</span>rrors.tuna.tsinghua.edu.cn<span class="hljs-regexp">/ubuntu-ports/</span> bionic-backports main restricted universe multiverse<br>deb http:<span class="hljs-regexp">//mi</span>rrors.tuna.tsinghua.edu.cn<span class="hljs-regexp">/ubuntu-ports/</span> bionic main universe restricted<br>deb-src http:<span class="hljs-regexp">//mi</span>rrors.tuna.tsinghua.edu.cn<span class="hljs-regexp">/ubuntu-ports/</span> bionic main universe restricted<br></code></pre></td></tr></table></figure></li><li>保存后退出，在终端输入<figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">sudo apt-<span class="hljs-keyword">get</span> <span class="hljs-keyword">update</span><br></code></pre></td></tr></table></figure></li><li>上述换源我遇到了”fail to fetch”的bug，最终我是执行下述代码完成的：(注意Jetson Xavier NX是ARM架构，官方源是ports.ubuntu.com)<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs nginx"><span class="hljs-attribute">sudo</span> sed -i <span class="hljs-string">&quot;s<span class="hljs-variable">@http</span>://ports.ubuntu.com<span class="hljs-variable">@https</span>://mirrors.tuna.tsinghua.edu.cn<span class="hljs-variable">@g</span>&quot;</span> /etc/apt/sources.list<br></code></pre></td></tr></table></figure></li></ol><h1 id="2-配置中文输入法"><a href="#2-配置中文输入法" class="headerlink" title="2 配置中文输入法"></a>2 配置中文输入法</h1><p>因为搜狗拼音是AMD架构，而Jetson Xavier NX是ARM架构的，因此需要安装google拼音输入法，安装步骤如下：</p><ol><li>打开终端输入：<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs routeros">sudo apt-<span class="hljs-built_in">get</span> install fcitx-googlepinyin<br></code></pre></td></tr></table></figure></li><li>安装完成后配置Language Support：打开左下角菜单栏，选择Language Support。如果显示语言支持未完全安装，则点击输入密码开始安装。</li><li>如果报错：“The following packages have unmet dependencies:gnome-user-docs-zh-hans : Depends: gnome-user-docs (&#x3D; 3.28.1-0ubuntu1) but 3.28.2+git20180715-0ubuntu0.1 is to be installed”，原因是系统中已经安装的gnome-user-docs与要求版本不一样，只需要卸载重新安装即可： <figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs routeros">sudo apt-<span class="hljs-built_in">get</span> <span class="hljs-built_in">remove</span> gnome-user-docs<br>sudo apt-<span class="hljs-built_in">get</span> install gnome-user-docs<br></code></pre></td></tr></table></figure></li><li>重启系统<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">sudo reboot</span><br></code></pre></td></tr></table></figure></li><li>点击右上角的键盘，选择“配置”后，将google拼音的顺序调前后退出，若键盘位置显示图标“g”则代表输入法配置成功。</li></ol><h1 id="3-环境配置"><a href="#3-环境配置" class="headerlink" title="3 环境配置"></a>3 环境配置</h1><h2 id="3-1-配置cuda"><a href="#3-1-配置cuda" class="headerlink" title="3.1 配置cuda"></a>3.1 配置cuda</h2><ol><li>测试系统是否自带<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">nvcc -V</span><br></code></pre></td></tr></table></figure></li><li>如果提示”nvcc:未找到命令”，则需要配置路径<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs awk">sudo gedit ~/.bashrc<br>在文件最后加入：<br>export CUDA_HOME=<span class="hljs-regexp">/usr/</span>local/cuda-&lt;version&gt;<br>export LD_LIBRARY_PATH=<span class="hljs-regexp">/usr/</span>local<span class="hljs-regexp">/cuda-&lt;version&gt;/</span>lib64:<span class="hljs-variable">$LD_LIBRARY_PATH</span><br>export PATH=<span class="hljs-regexp">/usr/</span>local<span class="hljs-regexp">/cuda-&lt;version&gt;/</span>bin:<span class="hljs-variable">$PATH</span><br></code></pre></td></tr></table></figure><blockquote><p>因为Jetpack5.0.2中的cuda版本是11.4，但是我将version替换成11.4时还是提示“未找到命令”，因此我直接到对应路径&#x2F;usr&#x2F;local下看到cuda对应的版本是11，替换后显示正确。</p></blockquote></li><li>最后更新一下路径后做测试<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash"><span class="hljs-built_in">source</span> ~/.bashrc<br></code></pre></td></tr></table></figure></li></ol><h2 id="3-2-安装python3及pip3"><a href="#3-2-安装python3及pip3" class="headerlink" title="3.2 安装python3及pip3"></a>3.2 安装python3及pip3</h2><ol><li>在终端下输入<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cmake">sudo apt <span class="hljs-keyword">install</span> python3-pip<br></code></pre></td></tr></table></figure></li><li>将pip升级为最新版本<figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ada">python3 -m pip install <span class="hljs-comment">--upgrade pip</span><br></code></pre></td></tr></table></figure></li></ol><h2 id="3-3-安装Jetson-stats管理工具"><a href="#3-3-安装Jetson-stats管理工具" class="headerlink" title="3.3 安装Jetson-stats管理工具"></a>3.3 安装Jetson-stats管理工具</h2><p>Jetson-stats是一个用来查看cpu电源，gpu的使用频率和调度情况的一个工具，它的安装依赖于pip3。</p><ol><li>在终端中利用pip3进行安装jetson-stats(Jetpack5.0.0以上版本目前仅支持测试版本的jtop)<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">sudo</span> -H pip3 install jetson-stats==<span class="hljs-number">4</span>.<span class="hljs-number">0</span>.<span class="hljs-number">0</span>rc2<br></code></pre></td></tr></table></figure></li><li>安装好后输入：<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">jtop</span><br></code></pre></td></tr></table></figure></li></ol><h2 id="3-4-配置Pytorch"><a href="#3-4-配置Pytorch" class="headerlink" title="3.4 配置Pytorch"></a>3.4 配置Pytorch</h2><ol><li>安装依赖<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs mipsasm">sudo apt-get <span class="hljs-keyword">install </span>libopenblas-<span class="hljs-keyword">base </span>libopenmpi-dev<br>sudo pip3 <span class="hljs-keyword">install </span>mpi4py<br>pip3 <span class="hljs-keyword">install </span>Cython<br>pip3 <span class="hljs-keyword">install </span>numpy<br></code></pre></td></tr></table></figure></li><li>在<a href="https://forums.developer.nvidia.com/t/pytorch-for-jetson/72048">官网</a>中下载对应版本的torch，在对应目录底下安装torch<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">sudo</span> pip3 install torch-<span class="hljs-number">1</span>.<span class="hljs-number">11</span>.<span class="hljs-number">0</span>-cp38-cp38-linux_aarch64.whl<br></code></pre></td></tr></table></figure></li><li>测试环境，输出版本号即安装成功<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs stylus">import torch<br><span class="hljs-function"><span class="hljs-title">print</span><span class="hljs-params">(torch.__version__)</span></span><br><span class="hljs-function"><span class="hljs-title">print</span><span class="hljs-params">(<span class="hljs-string">&#x27;CUDA available: &#x27;</span> + str(torch.cuda.is_available()</span></span>))<br></code></pre></td></tr></table></figure></li></ol><h2 id="3-5-配置Torchvision"><a href="#3-5-配置Torchvision" class="headerlink" title="3.5 配置Torchvision"></a>3.5 配置Torchvision</h2><ol><li>找到与torch匹配的torchvision版本，此处1.11.0对应vision版本为0.12.0</li><li>安装vision<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs awk">git clone -branch v0.<span class="hljs-number">12.0</span> https:<span class="hljs-regexp">//gi</span>thub.com<span class="hljs-regexp">/pytorch/</span>vision torchvision<br>cd torchvision<br>sudo python3 setup.py install<br></code></pre></td></tr></table></figure></li></ol>]]></content>
+    
+    
+    <categories>
+      
+      <category>Jetson Xavier NX</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>原创</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>Jetson Xavier NX配置实录（一）：刷机</title>
+    <link href="/2023/01/04/Jetson-Xavier-NX/"/>
+    <url>/2023/01/04/Jetson-Xavier-NX/</url>
+    
+    <content type="html"><![CDATA[<h1 id="1-介绍"><a href="#1-介绍" class="headerlink" title="1 介绍"></a>1 介绍</h1><p>Jetson Xavier NX是一款外形小巧的模组系统 (SOM)，可为边缘系统提供超级计算机性能。此处记录配置和应用Jetson Xavier NX的过程。<br>本次刷机主要参照<a href="https://developer.nvidia.com/embedded/learn/get-started-jetson-xavier-nx-devkit#prepare">Nvidia Developer</a>中用MicroSD卡在Windows下烧录系统的方法。</p><h1 id="2-刷机操作"><a href="#2-刷机操作" class="headerlink" title="2 刷机操作"></a>2 刷机操作</h1><h2 id="2-1-镜像烧录"><a href="#2-1-镜像烧录" class="headerlink" title="2.1 镜像烧录"></a>2.1 镜像烧录</h2><ol><li><p>首先准备一张Micro SD卡并进行格式化，格式化步骤如下：</p><ul><li>下载并安装SD Card Formatter </li><li>选择对应的Micro SD卡，Formatting options选择“Quick format”，点击Format进行格式化</li></ul> <img src="/2023/01/04/Jetson-Xavier-NX/1.png" class="" title="Micro SD卡格式化示意图"></li><li><p>下载<a href="https://developer.nvidia.com/embedded/jetpack">Jetson Xavier NX Developer Kit SD Card Image</a>,并下载安装balenaEtcher用于烧录</p><img src="/2023/01/04/Jetson-Xavier-NX/2.png" class="" title="balenaEtcher示意图"></li><li><p>打开balenaEtcher，“select image”处选择相应镜像，“select drive”中选择Micro SD卡，最后点击Flash进行烧录，大约耗时10分钟即可烧录完成。</p></li></ol><h2 id="2-2-Jetpack介绍"><a href="#2-2-Jetpack介绍" class="headerlink" title="2.2 Jetpack介绍"></a>2.2 Jetpack介绍</h2><p>镜像中已经包含了Jetson Xavier NX应用深度学习的Jetpack，目前安装的是最新版本的Jetpack(5.0.2)，其中包含系统、和常用包的版本如下：</p><ul><li>Ubuntu20.04</li><li>TensorRT8.4.1</li><li>cuDNN8.4.1</li><li>CUDA11.4.14</li></ul><h1 id="3-系统设置"><a href="#3-系统设置" class="headerlink" title="3 系统设置"></a>3 系统设置</h1><p>完成上述步骤后，将显示屏、键盘鼠标USB以及Micro SD卡安装好后，连接电源上电，则Jetson Xavier NX会自动启动，进入系统配置页面。</p><p>在系统语言中选择“简体中文”，时区选择上海，连接wifi和设置好用户名及密码后系统初始设置完成，系统将会重启。</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>Jetson Xavier NX</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>原创</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>test_article</title>
+    <link href="/2023/01/03/test-article/"/>
+    <url>/2023/01/03/test-article/</url>
+    
+    <content type="html"><![CDATA[<img src="/2023/01/03/test-article/IMG_9521.JPG" class="" title="图片引用方法一">]]></content>
+    
+    
+    <categories>
+      
+      <category>Jetson Xavier NX</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>原创</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>Hello World</title>
+    <link href="/2023/01/03/hello-world/"/>
+    <url>/2023/01/03/hello-world/</url>
+    
+    <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo new <span class="hljs-string">&quot;My New Post&quot;</span><br></code></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/writing.html">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo server<br></code></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/server.html">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo generate<br></code></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/generating.html">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs bash">$ hexo deploy<br></code></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>]]></content>
+    
+    
+    
+  </entry>
+  
+  
+  
+  
+</search>
